@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/food-aggregator.iml" filepath="$PROJECT_DIR$/.idea/modules/food-aggregator.iml" group="food-aggregator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/food-aggregator_main.iml" filepath="$PROJECT_DIR$/.idea/modules/food-aggregator_main.iml" group="food-aggregator" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/food-aggregator_test.iml" filepath="$PROJECT_DIR$/.idea/modules/food-aggregator_test.iml" group="food-aggregator" />
+    </modules>
+  </component>
+</project>
