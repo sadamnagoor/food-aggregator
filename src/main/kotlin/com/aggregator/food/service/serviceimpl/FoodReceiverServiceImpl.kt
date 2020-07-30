@@ -30,7 +30,7 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
         val responseStr = getItems(category)
         val foodReceiverDtoList = convertJsonToList(responseStr)
         val foodReceiverDto = findItem(foodReceiverDtoList, itemName)
-        return if (foodReceiverDto.name != null) {
+        return if (foodReceiverDto.quantity != 0) {
             universalResponse.`object` = foodReceiverDto
             universalResponse.responseCodeJson = ResponseCodeJson(200, "success")
             universalResponse
@@ -55,7 +55,7 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
             list.addAll(foodReceiverDtoList)
         }
         val foodReceiverDto1 = compareItemDetails(list, foodReceiverDto)
-        return if (foodReceiverDto1.name != null) {
+        return if (foodReceiverDto1.quantity != 0) {
             universalResponse.`object` = foodReceiverDto1
             universalResponse.responseCodeJson = ResponseCodeJson(200, "success")
             universalResponse
@@ -115,7 +115,18 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
      */
     private fun compareItemDetails(foodReceiverDtoList: List<FoodReceiverDto>, foodReceiverDto: FoodReceiverDto): FoodReceiverDto {
         val atomicReference = AtomicReference(FoodReceiverDto())
-        foodReceiverDtoList.forEach(Consumer { foodReceiverDto1: FoodReceiverDto -> if (foodReceiverDto1.name == foodReceiverDto.name && foodReceiverDto1.quantity == foodReceiverDto.quantity && foodReceiverDto1.price == foodReceiverDto.price) atomicReference.set(foodReceiverDto1) })
+        foodReceiverDtoList.forEach(Consumer { foodReceiverDto1: FoodReceiverDto ->
+            if (foodReceiverDto1.name != null) {
+                if (foodReceiverDto1.name == foodReceiverDto.name && foodReceiverDto1.quantity == foodReceiverDto.quantity && foodReceiverDto1.price == foodReceiverDto.price)
+                    atomicReference.set(foodReceiverDto1)
+            } else if (foodReceiverDto1.itemName != null) {
+                if (foodReceiverDto1.itemName == foodReceiverDto.name && foodReceiverDto1.quantity == foodReceiverDto.quantity && foodReceiverDto1.price == foodReceiverDto.price)
+                    atomicReference.set(foodReceiverDto1)
+            } else {
+                if (foodReceiverDto1.productName == foodReceiverDto.name && foodReceiverDto1.quantity == foodReceiverDto.quantity && foodReceiverDto1.price == foodReceiverDto.price)
+                    atomicReference.set(foodReceiverDto1)
+            }
+        })
         return atomicReference.get()
     }
 
@@ -125,7 +136,18 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
      */
     private fun findItem(foodReceiverDtoList: List<FoodReceiverDto>, itemName: String): FoodReceiverDto {
         val foodReceiverDto = AtomicReference(FoodReceiverDto())
-        foodReceiverDtoList.forEach(Consumer { foodReceiverDto1: FoodReceiverDto -> if (foodReceiverDto1.name == itemName) foodReceiverDto.set(foodReceiverDto1) })
+        foodReceiverDtoList.forEach(Consumer { foodReceiverDto1: FoodReceiverDto ->
+            if (foodReceiverDto1.name != null) {
+                if (foodReceiverDto1.name == itemName)
+                    foodReceiverDto.set(foodReceiverDto1)
+            } else if (foodReceiverDto1.itemName != null) {
+                if (foodReceiverDto1.itemName == itemName)
+                    foodReceiverDto.set(foodReceiverDto1)
+            } else {
+                if (foodReceiverDto1.productName == itemName)
+                    foodReceiverDto.set(foodReceiverDto1)
+            }
+        })
         return foodReceiverDto.get()
     }
 
