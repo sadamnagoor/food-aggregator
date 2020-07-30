@@ -17,7 +17,7 @@ import java.util.function.Consumer
  */
 @Service
 class FoodReceiverServiceImpl : FoodReceiverService, Constants {
-    private var list = ArrayList<FoodReceiverDto>();
+    private val list = ArrayList<FoodReceiverDto>();
 
     /**
      * function describes about getting
@@ -30,7 +30,7 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
         val responseStr = getItems(category)
         val foodReceiverDtoList = convertJsonToList(responseStr)
         val foodReceiverDto = findItem(foodReceiverDtoList, itemName)
-        return if (!foodReceiverDto.name.isEmpty()) {
+        return if (foodReceiverDto.name != null) {
             universalResponse.`object` = foodReceiverDto
             universalResponse.responseCodeJson = ResponseCodeJson(200, "success")
             universalResponse
@@ -55,7 +55,7 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
             list.addAll(foodReceiverDtoList)
         }
         val foodReceiverDto1 = compareItemDetails(list, foodReceiverDto)
-        return if (!foodReceiverDto1.name.isEmpty()) {
+        return if (foodReceiverDto1.name != null) {
             universalResponse.`object` = foodReceiverDto1
             universalResponse.responseCodeJson = ResponseCodeJson(200, "success")
             universalResponse
@@ -77,15 +77,17 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
         val itemsList: MutableList<FoodReceiverDto> = ArrayList()
         val finalItems: List<FoodReceiverDto?>
         var foodReceiverDtoList: List<FoodReceiverDto>
-        val categoryArray = foodReceiverDto.category.split(",".toRegex()).toTypedArray()
-        for (category in categoryArray) {
-            val responseStr = getItems(category)
-            foodReceiverDtoList = convertJsonToList(responseStr)
-            if (!foodReceiverDtoList.isEmpty()) {
-                itemsList.addAll(foodReceiverDtoList)
+        val categoryArray = foodReceiverDto.category?.split(",".toRegex())?.toTypedArray()
+        if (categoryArray != null) {
+            for (category in categoryArray) {
+                val responseStr = getItems(category)
+                foodReceiverDtoList = convertJsonToList(responseStr)
+                if (!foodReceiverDtoList.isEmpty()) {
+                    itemsList.addAll(foodReceiverDtoList)
+                }
             }
         }
-        return if (!itemsList.isEmpty()) {
+        return if (itemsList.isNotEmpty()) {
             finalItems = findItems(itemsList, foodReceiverDto.name)
             universalResponse.list = finalItems
             universalResponse.responseCodeJson = ResponseCodeJson(200, "success")
@@ -131,12 +133,12 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
      * function describes about finding
      * item based on item names
      */
-    private fun findItems(foodReceiverDtoList: List<FoodReceiverDto>, itemName: String): List<FoodReceiverDto?> {
+    private fun findItems(foodReceiverDtoList: List<FoodReceiverDto>, itemName: String?): List<FoodReceiverDto?> {
         val itemsList: MutableList<FoodReceiverDto?> = ArrayList()
-        val itemNamesArray = itemName.split(",".toRegex()).toTypedArray()
+        val itemNamesArray = itemName?.split(",".toRegex())?.toTypedArray()
         for (foodReceiverDto in foodReceiverDtoList) {
-            val result = compareWithArray(foodReceiverDto, itemNamesArray)
-            if (result) {
+            val result = itemNamesArray?.let { compareWithArray(foodReceiverDto, it) }
+            if (result!!) {
                 itemsList.add(foodReceiverDto)
             }
         }
@@ -150,10 +152,18 @@ class FoodReceiverServiceImpl : FoodReceiverService, Constants {
     private fun compareWithArray(foodReceiverDto: FoodReceiverDto, itemArray: Array<String>): Boolean {
         var count = 0
         for (s in itemArray) {
-            if (foodReceiverDto.name == s) {
-                count++
-                break
+            if (foodReceiverDto.name != null) {
+                if (foodReceiverDto.name == s)
+                    count++
+            } else if (foodReceiverDto.itemName != null) {
+                if (foodReceiverDto.itemName == s)
+                    count++
+            } else {
+                if (foodReceiverDto.productName == s)
+                    count++
             }
+            if (count == 1)
+                break
         }
         return count == 1
     }

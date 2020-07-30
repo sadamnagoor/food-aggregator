@@ -14,7 +14,7 @@ import java.net.URL
 class FoodSuppliersUtil : Constants {
     companion object {
         @Throws(Exception::class)
-        fun getItems(category: String): String {
+        fun getItems(category: String?): String {
              var url = if (category.equals(Constants.FRUIT_CATEGORY, ignoreCase = true)) {
                 Constants.FRUIT_API_ENDPOINT
             } else if (category.equals(Constants.GRAIN_CATEGORY, ignoreCase = true)) {
