@@ -1,0 +1,208 @@
+reuest for "buy-item" api endpoint:
+success request 1: get request using path varaible
+
+http://localhost:8080/receiver/buy-item/fruits/Apple
+
+response:
+
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "object": {
+        "id": "75-588-0160",
+        "name": "Apple",
+        "quantity": 28,
+        "price": "$86.41"
+    }
+}
+
+success request 2: get request using path varaible
+
+http://localhost:8080/receiver/buy-item/grains/wheat
+
+response:
+
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "object": {
+        "quantity": 22,
+        "price": "$89.96",
+        "itemId": "66-907-8874",
+        "itemName": "wheat"
+    }
+}
+
+error request:
+
+http://localhost:8080/receiver/buy-item/grains/rice
+
+response:
+
+{
+    "code": 404,
+    "description": "item not found"
+}
+
+---------------------------------------------------------------------------------------------------------------
+request for buy-item-qty-price api endpoint:
+
+success request 1: post request
+
+http://localhost:8080/receiver/buy-item-qty-price
+
+{
+ "category":"fruits",
+  "name": "banana",
+  "quantity": 21,
+  "price": "$99.41"
+}
+
+response:
+
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "object": {
+        "id": "28-996-2788",
+        "name": "banana",
+        "quantity": 21,
+        "price": "$99.41"
+    }
+}
+
+success request 2: post request
+
+{
+ "category":"vegetables",
+  "name": "okra",
+  "quantity": 15,
+  "price": "$61.42"
+}
+
+response:
+
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "object": {
+        "quantity": 15,
+        "price": "$61.42",
+        "productId": "74-033-7213",
+        "productName": "okra"
+    }
+}
+
+error request:
+
+{
+ "category":"vegetables",
+  "name": "",
+  "quantity": 15,
+  "price": "$61.42"
+}
+ response:
+{
+    "code": 402,
+    "description": "item not found"
+}
+
+---------------------------------------------------------------------------------------------------------------
+request for fast-buy-item api endpoint:
+ 
+Request method = post:
+request 1:
+{
+   "category":"fruits,grains",
+  "name": "Apple,wheat",
+  "quantity": 0,
+  "price": "$62.02"
+}
+
+Response:
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "list": [
+        {
+            "id": "24-583-0264",
+            "name": "Apple",
+            "quantity": 30,
+            "price": "$62.02"
+        },
+        {
+            "quantity": 22,
+            "price": "$89.96",
+            "itemId": "66-907-8874",
+            "itemName": "wheat"
+        }
+    ]
+}
+
+request 2:
+{
+   "category":"fruits,vegetables",
+  "name": "banana,Carrot",
+  "quantity": 0,
+  "price": "$62.02"
+}
+
+respnse:
+
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "list": [
+        {
+            "id": "28-996-2788",
+            "name": "banana",
+            "quantity": 21,
+            "price": "$99.41"
+        },
+        {
+            "quantity": 13,
+            "price": "$71.01",
+            "productId": "76-152-3057",
+            "productName": "Carrot"
+        }
+    ]
+}
+
+request 3:
+
+{
+   "category":"fruits",
+  "name": "banana",
+  "quantity": 0,
+  "price": "$62.02"
+}
+
+response:
+
+{
+    "responseCodeJson": {
+        "errorCode": 200,
+        "message": "success"
+    },
+    "list": [
+        {
+            "id": "28-996-2788",
+            "name": "banana",
+            "quantity": 21,
+            "price": "$99.41"
+        }
+    ]
+}
+-------------------------------------------------------------------------------------------------------------------------
